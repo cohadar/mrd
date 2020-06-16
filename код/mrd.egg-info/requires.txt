@@ -1,0 +1,4 @@
+pysdl2
+
+[dev]
+pytest

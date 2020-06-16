@@ -1,0 +1,3 @@
+03000000790000001100000006010000,Trust GXT 510,platform:Mac OS X,a:b2,b:b1,x:b3,y:b0,back:b8,start:b9,leftshoulder:b4,rightshoulder:b5,dpup:-a4,dpdown:+a4,dpleft:-a3,dpright:+a3,lefttrigger:b6,righttrigger:b7,
+030000001008000001e5000006010000,JETION JT-U5548,platform:Mac OS X,a:b2,b:b1,x:b3,y:b0,back:b8,start:b9,leftshoulder:b4,rightshoulder:b5,dpup:-a1,dpdown:+a1,dpleft:-a0,dpright:+a0,lefttrigger:b6,righttrigger:b7,
+03000000790000000600000007010000,HAVIT HV-G69,platform:Mac OS X,a:b2,b:b1,x:b3,y:b0,back:b8,start:b9,leftstick:b10,rightstick:b11,leftshoulder:b4,rightshoulder:b5,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:b6,righttrigger:b7,

@@ -1,0 +1,7 @@
+setup.cfg
+setup.py
+код/mrd.egg-info/PKG-INFO
+код/mrd.egg-info/SOURCES.txt
+код/mrd.egg-info/dependency_links.txt
+код/mrd.egg-info/requires.txt
+код/mrd.egg-info/top_level.txt

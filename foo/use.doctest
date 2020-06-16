@@ -1,0 +1,9 @@
+>>> from ctypes import *
+>>> libc = cdll.LoadLibrary('libc.dylib')
+>>> foo = cdll.LoadLibrary('libfoo.so')
+>>> foo.add(3, 4)
+7
+>>> foo.concat.restype = c_char_p
+>>> foo.concat.argtypes = [c_char_p, c_char_p]
+>>> foo.concat(b'trla ', b'baba')
+b'trla baba'
