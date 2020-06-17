@@ -33,6 +33,7 @@ def loop(штампа_догађаја, обрада_догађаја, renderer,
     for i, _ in enumerate(my_pixels):
         my_pixels[i] = random.randint(0, 255)
     while not quit:
+        штампано = False
         while sdl2.SDL_PollEvent(ctypes.byref(event)) != 0:
             if event.type == sdl2.SDL_QUIT:
                 quit = True
@@ -40,6 +41,7 @@ def loop(штампа_догађаја, обрада_догађаја, renderer,
             if event.type not in штампа_догађаја:
                 raise Exception('Непознат догађај:', hex(event.type))
             штампа_догађаја[event.type](event)
+            штампано = True
             if event.type in обрада_догађаја:
                 обрада_догађаја[event.type](event)
         for _ in range(10000):
@@ -49,6 +51,8 @@ def loop(штампа_догађаја, обрада_догађаја, renderer,
         sdl2.SDL_RenderClear(renderer)
         sdl2.SDL_RenderCopy(renderer, texture, None, None)
         sdl2.SDL_RenderPresent(renderer)
+        if штампано:
+            print()
 
 
 def open_controller(event):
