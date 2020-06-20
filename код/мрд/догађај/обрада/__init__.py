@@ -8,7 +8,11 @@ def open_controller(event):
         raise Exception('SDL_GameControllerOpen', sdl2.SDL_GetError())
     print('otvoren gamepad', controller)
     mapping = sdl2.SDL_GameControllerMapping(controller)
+    if not mapping:
+        raise Exception('SDL_GameControllerMapping', sdl2.SDL_GetError())
     name = sdl2.SDL_GameControllerName(controller)
+    if not name:
+        raise Exception('SDL_GameControllerName', sdl2.SDL_GetError())
     print('mapping:', mapping)
     print('name:', name)
 
@@ -19,6 +23,8 @@ def open_joystick(event):
     if not joystick:
         raise Exception('SDL_JoystickOpen', sdl2.SDL_GetError())
     name = sdl2.SDL_JoystickName(joystick)
+    if not name:
+        raise Exception('SDL_JoystickName', sdl2.SDL_GetError())
     print('joystick added:', name)
 
 

@@ -7,7 +7,7 @@ import atexit
 class Почетак():
     def на_крају(бре):
         print("Гасим sdl2")
-        sdl2.SDL_Quit()
+        sdl2.SDL_Quit()  # void function
 
     def __init__(бре):
         atexit.register(бре.на_крају)
@@ -22,9 +22,9 @@ class Почетак():
 class Крај():
     def на_крају(бре):
         print("Гасим молера")
-        sdl2.SDL_DestroyRenderer(бре.молер)
+        sdl2.SDL_DestroyRenderer(бре.молер)  # void function
         print("Гасим прозор")
-        sdl2.SDL_DestroyWindow(бре.прозор)
+        sdl2.SDL_DestroyWindow(бре.прозор)  # void function
 
     def __init__(бре, прозор, молер):
         бре.прозор = прозор
@@ -39,8 +39,8 @@ def Прозор(почетак, наслов, ширина, висина):
         sdl2.SDL_WINDOWPOS_UNDEFINED,
         ширина,
         висина,
-        # sdl2.SDL_WINDOW_SHOWN
-        sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN
+        sdl2.SDL_WINDOW_SHOWN
+        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN
         # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_MAXIMIZED
         # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
     )
@@ -68,16 +68,16 @@ def ГлавнаШара(молер, ширина, висина):
 
 
 class Воденица():
-    def доцртај(бре, my_pixels):
+    def доцртај(бре):
         def index(y, x):
             return (y * бре.ширина + x) * 4
 
         for y in range(0, 16):
             for x in range(0, 16):
-                my_pixels[index(y, x) + 0] = 0
-                my_pixels[index(y, x) + 1] = 0
-                my_pixels[index(y, x) + 2] = 255
-                my_pixels[index(y, x) + 3] = 255
+                бре.пиксели[index(y, x) + 0] = 0
+                бре.пиксели[index(y, x) + 1] = 0
+                бре.пиксели[index(y, x) + 2] = 255
+                бре.пиксели[index(y, x) + 3] = 255
 
     def __init__(бре, штампа_догађаја, обрада_догађаја, молер, главна_шара, ширина, висина):
         бре.штампа_догађаја = штампа_догађаја
@@ -86,13 +86,13 @@ class Воденица():
         бре.главна_шара = главна_шара
         бре.ширина = ширина
         бре.висина = висина
+        бре.пиксели = ctypes.create_string_buffer(бре.ширина * бре.висина * 4)
 
     def __call__(бре):
         quit = False
         event = sdl2.SDL_Event()
-        my_pixels = ctypes.create_string_buffer(бре.ширина * бре.висина * 4)
-        for i, _ in enumerate(my_pixels):
-            my_pixels[i] = random.randint(0, 255)
+        for i, _ in enumerate(бре.пиксели):
+            бре.пиксели[i] = random.randint(0, 255)
         while not quit:
             штампано = False
             while sdl2.SDL_PollEvent(ctypes.byref(event)) != 0:
@@ -106,12 +106,18 @@ class Воденица():
                 if event.type in бре.обрада_догађаја:
                     бре.обрада_догађаја[event.type](event)
             for _ in range(10000):
-                my_pixels[random.randint(0, бре.ширина * бре.висина * 4 - 1)] = random.randint(0, 255)
-            бре.доцртај(my_pixels)
-            sdl2.SDL_UpdateTexture(бре.главна_шара, None, my_pixels, бре.ширина * 4)
-            sdl2.SDL_RenderClear(бре.молер)
-            sdl2.SDL_RenderCopy(бре.молер, бре.главна_шара, None, None)
-            sdl2.SDL_RenderPresent(бре.молер)
+                бре.пиксели[random.randint(0, бре.ширина * бре.висина * 4 - 1)] = random.randint(0, 255)
+            бре.доцртај()
+            рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, бре.пиксели, бре.ширина * 4)
+            if рез != 0:
+                raise Exception('SDL_UpdateTexture', sdl2.SDL_GetError())
+            рез = sdl2.SDL_RenderClear(бре.молер)
+            if рез != 0:
+                raise Exception('SDL_RenderClear', sdl2.SDL_GetError())
+            рез = sdl2.SDL_RenderCopy(бре.молер, бре.главна_шара, None, None)
+            if рез != 0:
+                raise Exception('SDL_RenderCopy', sdl2.SDL_GetError())
+            sdl2.SDL_RenderPresent(бре.молер)  # void function
             if штампано:
                 print()
 
