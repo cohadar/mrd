@@ -1,5 +1,5 @@
 import sdl2
-from улаз.__init__ import pprint
+from догађај import pprint
 
 
 def audio_device_added(event):

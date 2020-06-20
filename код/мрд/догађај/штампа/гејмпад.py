@@ -1,6 +1,6 @@
 import sdl2
 from functools import partial
-from улаз.__init__ import pprint
+from догађај import pprint
 
 
 def controller_device_added(event):
