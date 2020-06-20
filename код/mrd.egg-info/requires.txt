@@ -1,4 +1,6 @@
 pysdl2
+attr
+dependency-injector
 
 [dev]
 pytest

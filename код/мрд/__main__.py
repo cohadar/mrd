@@ -3,11 +3,33 @@ import ctypes
 import atexit
 import sdl2
 from улаз.штампа import штампа
-event_handlers = {}
+from дуњалук import Почетак, Крај, Молер, Прозор
+import dependency_injector.containers as containers
+import dependency_injector.providers as providers
 
 
 MAIN_WIDTH = 16 * 15
 MAIN_HEIGHT = 9 * 15
+
+
+class Контејнер(containers.DynamicContainer):
+    def __init__(к):
+        super().__init__()
+        к.ширина = providers.Object(16 * 15)
+        к.висина = providers.Object(9 * 15)
+        к.почетак = providers.Singleton(Почетак)
+        к.прозор = providers.Factory(Прозор, почетак=к.почетак, наслов="Мрд", ширина=к.ширина, висина=к.висина)
+        к.молер = providers.Factory(Молер, прозор=к.прозор)
+        к.крај = providers.Singleton(Крај, прозор=к.прозор, молер=к.молер)
+        # к.дирови = providers.Callable(к.листа_дирова, каталог=к.каталог)
+        # к.шпилови = providers.Callable(к.листа_шпилова)
+        # к.терминал = providers.Singleton(Терминал)
+        # к.регистар = providers.Factory(Регистар)
+        # к.главна_ui = providers.Factory(ГлавнаUI, терминал=к.терминал, регистар=к.регистар)
+        # к.главна = providers.Factory(Главна, ui=к.главна_ui, шпилови=к.шпилови)
+
+
+event_handlers = {}
 
 
 RED = sdl2.SDL_Color(0xe5, 0x00, 0x00, 0xff)
@@ -24,6 +46,24 @@ def доцртај(my_pixels):
             my_pixels[index(y, x) + 1] = 0
             my_pixels[index(y, x) + 2] = 255
             my_pixels[index(y, x) + 3] = 255
+
+
+MY_X = 0
+MY_Y = 0
+
+
+def стрелице(event):
+    global MY_X
+    global MY_Y
+    код = event.key.keysym.scancode
+    if код == sdl2.SDL_SCANCODE_UP:
+        MY_Y -= 1
+    elif код == sdl2.SDL_SCANCODE_DOWN:
+        MY_Y += 1
+    elif код == sdl2.SDL_SCANCODE_LEFT:
+        MY_X -= 1
+    elif код == sdl2.SDL_SCANCODE_RIGHT:
+        MY_X += 1
 
 
 def loop(штампа_догађаја, обрада_догађаја, renderer, texture):
@@ -81,45 +121,26 @@ def close_controller(event):
     pass
 
 
-def main():
-    atexit.register(sdl2.SDL_Quit)
-    res = sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_AUDIO | sdl2.SDL_INIT_GAMECONTROLLER)
-    if res != 0:
-        raise Exception('SDL_Init', sdl2.SDL_GetError())
+def главна():
+    к = Контејнер()
+    почетак, крај = к.почетак(), к.крај()
+
     res = sdl2.SDL_GameControllerAddMappingsFromFile(b"mygamecontrollerdb.txt")
     if res == -1:
         raise Exception('SDL_GameControllerAddMappingsFromFile', sdl2.SDL_GetError())
-    window = sdl2.SDL_CreateWindow(
-        "Mrd".encode('utf-8'),
-        sdl2.SDL_WINDOWPOS_UNDEFINED,
-        sdl2.SDL_WINDOWPOS_UNDEFINED,
-        MAIN_WIDTH,
-        MAIN_HEIGHT,
-        sdl2.SDL_WINDOW_SHOWN
-        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN
-        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
-        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_MAXIMIZED
-    )
-    if not window:
-        raise Exception('SDL_CreateWindow', sdl2.SDL.GetError())
-    renderer = sdl2.SDL_CreateRenderer(window, -1, 0)
-    if not renderer:
-        raise Exception('SDL_CreateRenderer', sdl2.SDL.GetError())
     штампа_догађаја = штампа()
     обрада_догађаја = {}
     обрада_догађаја[sdl2.SDL_CONTROLLERDEVICEADDED] = open_controller
     обрада_догађаја[sdl2.SDL_CONTROLLERDEVICEREMOVED] = close_controller
     # обрада_догађаја[sdl2.SDL_JOYDEVICEADDED] = open_joystick
-    texture = sdl2.SDL_CreateTexture(
-            renderer,
+    шара = sdl2.SDL_CreateTexture(
+            крај.молер.сиров,
             sdl2.SDL_PIXELFORMAT_ARGB8888,
             sdl2.SDL_TEXTUREACCESS_STREAMING,
             MAIN_WIDTH, MAIN_HEIGHT)
-    loop(штампа_догађаја, обрада_догађаја, renderer, texture)  # <---<<
-    sdl2.SDL_DestroyRenderer(renderer)
-    sdl2.SDL_DestroyWindow(window)
+    loop(штампа_догађаја, обрада_догађаја, крај.молер.сиров, шара)  # <---<<
 
 
 if __name__ == '__main__':
-    main()
+    главна()
 
