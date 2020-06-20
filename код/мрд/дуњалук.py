@@ -9,9 +9,12 @@ class Почетак():
 
     def __init__(бре):
         atexit.register(бре.на_крају)
-        res = sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_AUDIO | sdl2.SDL_INIT_GAMECONTROLLER)
-        if res != 0:
+        рез = sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_AUDIO | sdl2.SDL_INIT_GAMECONTROLLER)
+        if рез != 0:
             raise Exception('SDL_Init', sdl2.SDL_GetError())
+        рез = sdl2.SDL_GameControllerAddMappingsFromFile(b"mygamecontrollerdb.txt")
+        if рез == -1:
+            raise Exception('SDL_GameControllerAddMappingsFromFile', sdl2.SDL_GetError())
 
 
 class Крај():

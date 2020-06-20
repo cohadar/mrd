@@ -1,8 +1,7 @@
 import random
 import ctypes
-import atexit
 import sdl2
-from улаз.штампа import штампа
+from улаз.штампа import напуни
 from дуњалук import Почетак, Крај, Молер, Прозор
 import dependency_injector.containers as containers
 import dependency_injector.providers as providers
@@ -125,10 +124,8 @@ def главна():
     к = Контејнер()
     почетак, крај = к.почетак(), к.крај()
 
-    res = sdl2.SDL_GameControllerAddMappingsFromFile(b"mygamecontrollerdb.txt")
-    if res == -1:
-        raise Exception('SDL_GameControllerAddMappingsFromFile', sdl2.SDL_GetError())
-    штампа_догађаја = штампа()
+    штампа_догађаја = {}
+    напуни(штампа_догађаја)
     обрада_догађаја = {}
     обрада_догађаја[sdl2.SDL_CONTROLLERDEVICEADDED] = open_controller
     обрада_догађаја[sdl2.SDL_CONTROLLERDEVICEREMOVED] = close_controller
