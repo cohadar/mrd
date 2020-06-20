@@ -1,6 +1,5 @@
 import sdl2
 import ctypes
-import random
 import atexit
 
 
@@ -39,10 +38,10 @@ def Прозор(почетак, наслов, ширина, висина):
         sdl2.SDL_WINDOWPOS_UNDEFINED,
         ширина,
         висина,
-        sdl2.SDL_WINDOW_SHOWN
+        # sdl2.SDL_WINDOW_SHOWN
         # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN
         # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_MAXIMIZED
-        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
+        sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
     )
     if not рез:
         raise Exception('SDL_CreateWindow', sdl2.SDL_GetError())
@@ -67,47 +66,32 @@ def ГлавнаШара(молер, ширина, висина):
     return рез
 
 
+def Пиксели(ширина, висина):
+    return ctypes.create_string_buffer(ширина * висина * 4)
+
+
 class Воденица():
-    def доцртај(бре):
-        def index(y, x):
-            return (y * бре.ширина + x) * 4
-
-        for y in range(0, 16):
-            for x in range(0, 16):
-                бре.пиксели[index(y, x) + 0] = 0
-                бре.пиксели[index(y, x) + 1] = 0
-                бре.пиксели[index(y, x) + 2] = 255
-                бре.пиксели[index(y, x) + 3] = 255
-
-    def __init__(бре, штампа_догађаја, обрада_догађаја, молер, главна_шара, ширина, висина):
-        бре.штампа_догађаја = штампа_догађаја
+    def __init__(бре, обрада_догађаја, шкработине, молер, главна_шара, пиксели, ширина):
         бре.обрада_догађаја = обрада_догађаја
+        бре.шкработине = шкработине
         бре.молер = молер
         бре.главна_шара = главна_шара
+        бре.пиксели = пиксели
         бре.ширина = ширина
-        бре.висина = висина
-        бре.пиксели = ctypes.create_string_buffer(бре.ширина * бре.висина * 4)
 
     def __call__(бре):
-        quit = False
-        event = sdl2.SDL_Event()
-        for i, _ in enumerate(бре.пиксели):
-            бре.пиксели[i] = random.randint(0, 255)
-        while not quit:
+        крај = False
+        догађај = sdl2.SDL_Event()
+        while not крај:
             штампано = False
-            while sdl2.SDL_PollEvent(ctypes.byref(event)) != 0:
-                if event.type == sdl2.SDL_QUIT:
-                    quit = True
+            while sdl2.SDL_PollEvent(ctypes.byref(догађај)) != 0:
+                if догађај.type == sdl2.SDL_QUIT:
+                    крај = True
                     break
-                if event.type not in бре.штампа_догађаја:
-                    raise Exception('Непознат догађај:', hex(event.type))
-                бре.штампа_догађаја[event.type](event)
                 штампано = True
-                if event.type in бре.обрада_догађаја:
-                    бре.обрада_догађаја[event.type](event)
-            for _ in range(10000):
-                бре.пиксели[random.randint(0, бре.ширина * бре.висина * 4 - 1)] = random.randint(0, 255)
-            бре.доцртај()
+                бре.обрада_догађаја.обради(догађај)
+            for шкработина in бре.шкработине:
+                шкработина.нашкрабај()
             рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, бре.пиксели, бре.ширина * 4)
             if рез != 0:
                 raise Exception('SDL_UpdateTexture', sdl2.SDL_GetError())

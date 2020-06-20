@@ -35,9 +35,9 @@ def mouse_wheel(event):
     pprint("SDL_MOUSEWHEEL", zip(keys, values))
 
 
-def напуни(обрада_догађаја):
-    обрада_догађаја[sdl2.SDL_MOUSEMOTION] = mouse_motion
-    обрада_догађаја[sdl2.SDL_MOUSEBUTTONDOWN] = mouse_button_down
-    обрада_догађаја[sdl2.SDL_MOUSEBUTTONUP] = mouse_button_up
-    обрада_догађаја[sdl2.SDL_MOUSEWHEEL] = mouse_wheel
+def региструј(обрада_догађаја):
+    обрада_догађаја.региструј(sdl2.SDL_MOUSEMOTION, mouse_motion)
+    обрада_догађаја.региструј(sdl2.SDL_MOUSEBUTTONDOWN, mouse_button_down)
+    обрада_догађаја.региструј(sdl2.SDL_MOUSEBUTTONUP, mouse_button_up)
+    обрада_догађаја.региструј(sdl2.SDL_MOUSEWHEEL, mouse_wheel)
 

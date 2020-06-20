@@ -26,8 +26,8 @@ def clipboard_update(event):
     pprint("SDL_CLIPBOARDUPDATE", zip(keys, values))
 
 
-def напуни(обрада_догађаја):
-    обрада_догађаја[sdl2.SDL_AUDIODEVICEADDED] = audio_device_added
-    обрада_догађаја[sdl2.SDL_WINDOWEVENT] = window_event
-    обрада_догађаја[sdl2.SDL_CLIPBOARDUPDATE] = clipboard_update
+def региструј(обрада_догађаја):
+    обрада_догађаја.региструј(sdl2.SDL_AUDIODEVICEADDED, audio_device_added)
+    обрада_догађаја.региструј(sdl2.SDL_WINDOWEVENT, window_event)
+    обрада_догађаја.региструј(sdl2.SDL_CLIPBOARDUPDATE, clipboard_update)
 

@@ -40,9 +40,9 @@ def keymap_changed(event):
     pprint("SDL_KEYMAPCHANGED", zip(keys, values))
 
 
-def напуни(обрада_догађаја):
-    обрада_догађаја[sdl2.SDL_KEYDOWN] = key_down
-    обрада_догађаја[sdl2.SDL_KEYUP] = key_up
-    обрада_догађаја[sdl2.SDL_TEXTINPUT] = text_input
-    обрада_догађаја[sdl2.SDL_KEYMAPCHANGED] = keymap_changed
+def региструј(обрада_догађаја):
+    обрада_догађаја.региструј(sdl2.SDL_KEYDOWN, key_down)
+    обрада_догађаја.региструј(sdl2.SDL_KEYUP, key_up)
+    обрада_догађаја.региструј(sdl2.SDL_TEXTINPUT, text_input)
+    обрада_догађаја.региструј(sdl2.SDL_KEYMAPCHANGED, keymap_changed)
 

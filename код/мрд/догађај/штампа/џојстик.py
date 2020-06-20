@@ -43,11 +43,11 @@ def joy_hat_motion(event):
     pprint("SDL_JOYHATMOTION", zip(keys, values))
 
 
-def напуни(обрада_догађаја):
-    обрада_догађаја[sdl2.SDL_JOYBUTTONDOWN] = partial(joy_button, 'SDL_JOYBUTTONDOWN')
-    обрада_догађаја[sdl2.SDL_JOYBUTTONUP] = partial(joy_button, 'SDL_JOYBUTTONUP')
-    обрада_догађаја[sdl2.SDL_JOYAXISMOTION] = joy_axis_motion
-    обрада_догађаја[sdl2.SDL_JOYHATMOTION] = joy_hat_motion
-    обрада_догађаја[sdl2.SDL_JOYDEVICEADDED] = joy_device_added
-    обрада_догађаја[sdl2.SDL_JOYDEVICEREMOVED] = joy_device_removed
+def региструј(обрада_догађаја):
+    обрада_догађаја.региструј(sdl2.SDL_JOYBUTTONDOWN, partial(joy_button, 'SDL_JOYBUTTONDOWN'))
+    обрада_догађаја.региструј(sdl2.SDL_JOYBUTTONUP, partial(joy_button, 'SDL_JOYBUTTONUP'))
+    обрада_догађаја.региструј(sdl2.SDL_JOYAXISMOTION, joy_axis_motion)
+    обрада_догађаја.региструј(sdl2.SDL_JOYHATMOTION, joy_hat_motion)
+    обрада_догађаја.региструј(sdl2.SDL_JOYDEVICEADDED, joy_device_added)
+    обрада_догађаја.региструј(sdl2.SDL_JOYDEVICEREMOVED, joy_device_removed)
 

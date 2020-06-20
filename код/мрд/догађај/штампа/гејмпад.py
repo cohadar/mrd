@@ -35,10 +35,10 @@ def controller_axis_motion(event):
     pprint("SDL_CONTROLLERAXISMOTION", zip(keys, values))
 
 
-def напуни(обрада_догађаја):
-    обрада_догађаја[sdl2.SDL_CONTROLLERBUTTONDOWN] = partial(controller_button, 'SDL_CONTROLLERBUTTONDOWN')
-    обрада_догађаја[sdl2.SDL_CONTROLLERBUTTONUP] = partial(controller_button, 'SDL_CONTROLLERBUTTONUP')
-    обрада_догађаја[sdl2.SDL_CONTROLLERAXISMOTION] = controller_axis_motion
-    обрада_догађаја[sdl2.SDL_CONTROLLERDEVICEADDED] = controller_device_added
-    обрада_догађаја[sdl2.SDL_CONTROLLERDEVICEREMOVED] = controller_device_removed
+def региструј(обрада_догађаја):
+    обрада_догађаја.региструј(sdl2.SDL_CONTROLLERBUTTONDOWN, partial(controller_button, 'SDL_CONTROLLERBUTTONDOWN'))
+    обрада_догађаја.региструј(sdl2.SDL_CONTROLLERBUTTONUP, partial(controller_button, 'SDL_CONTROLLERBUTTONUP'))
+    обрада_догађаја.региструј(sdl2.SDL_CONTROLLERAXISMOTION, controller_axis_motion)
+    обрада_догађаја.региструј(sdl2.SDL_CONTROLLERDEVICEADDED, controller_device_added)
+    обрада_догађаја.региструј(sdl2.SDL_CONTROLLERDEVICEREMOVED, controller_device_removed)
 
