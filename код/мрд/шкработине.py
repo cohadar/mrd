@@ -1,5 +1,6 @@
 import sdl2
 import random
+import ctypes
 
 
 class Шкработине():
@@ -43,6 +44,49 @@ class ЦрвенаКоцка():
                 бре.пиксели[index + 1] = 0
                 бре.пиксели[index + 2] = 0
                 бре.пиксели[index + 3] = 255
+
+
+class ПлаваКоцка():
+    def обради(бре, догађај):
+        код = догађај.key.keysym.scancode
+        if код == sdl2.SDL_SCANCODE_W:
+            бре.пуо.y -= 1
+        elif код == sdl2.SDL_SCANCODE_S:
+            бре.пуо.y += 1
+        elif код == sdl2.SDL_SCANCODE_A:
+            бре.пуо.x -= 1
+        elif код == sdl2.SDL_SCANCODE_D:
+            бре.пуо.x += 1
+        else:
+            print(код)
+        print(бре.пуо.x, бре.пуо.y)
+
+    def __init__(бре, главна_површ, обрада_догађаја):
+        print("ПлаваКоцка __init__")
+        обрада_догађаја.региструј(sdl2.SDL_KEYDOWN, бре.обради)
+        бре.главна_површ = главна_површ
+        бре.пуо = sdl2.SDL_Rect()
+        бре.пуо.x = 50
+        бре.пуо.y = 50
+        бре.пуо.w = 16
+        бре.пуо.h = 16
+        бре.плава = sdl2.SDL_CreateRGBSurfaceWithFormat(0, 16, 16, 32, sdl2.SDL_PIXELFORMAT_RGBA32)
+        if not бре.плава:
+            raise Exception('SDL_CreateRGBSurfaceWithFormat', sdl2.SDL_GetError())
+        рез = sdl2.SDL_SetSurfaceBlendMode(бре.плава, sdl2.SDL_BLENDMODE_NONE)
+        if рез != 0:
+            raise Exception('SDL_SetSurfaceBlendMode', sdl2.SDL_GetError())
+        рез = sdl2.SDL_FillRect(бре.плава, ctypes.byref(бре.пуо), 0xFFFFFFFF)
+        if рез != 0:
+            raise Exception('SDL_FillRect', sdl2.SDL_GetError())
+
+    def нашкрабај(бре):
+        # рез = sdl2.SDL_FillRect(бре.главна_површ, ctypes.byref(бре.пуо), 0x00FF0000)
+        # if рез != 0:
+        #     raise Exception('SDL_FillRect', sdl2.SDL_GetError())
+        рез = sdl2.SDL_BlitSurface(бре.плава, None, бре.главна_површ, ctypes.byref(бре.пуо))
+        if рез != 0:
+            raise Exception('SDL_BlitSurface', sdl2.SDL_GetError())
 
 
 class ШаренаПозадина():

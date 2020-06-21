@@ -124,7 +124,6 @@ class Воденица():
             for шкработина in бре.шкработине:
                 шкработина.нашкрабај()
             рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, бре.пиксели, бре.корак)
-            # SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
             if рез != 0:
                 raise Exception('SDL_UpdateTexture', sdl2.SDL_GetError())
             рез = sdl2.SDL_RenderClear(бре.молер)
