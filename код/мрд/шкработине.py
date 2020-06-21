@@ -66,8 +66,8 @@ class ПлаваКоцка():
         обрада_догађаја.региструј(sdl2.SDL_KEYDOWN, бре.обради)
         бре.главна_површ = главна_површ
         бре.пуо = sdl2.SDL_Rect()
-        бре.пуо.x = 50
-        бре.пуо.y = 50
+        бре.пуо.x = 0
+        бре.пуо.y = 0
         бре.пуо.w = 16
         бре.пуо.h = 16
         бре.плава = sdl2.SDL_CreateRGBSurfaceWithFormat(0, 16, 16, 32, sdl2.SDL_PIXELFORMAT_RGBA32)
@@ -76,9 +76,11 @@ class ПлаваКоцка():
         рез = sdl2.SDL_SetSurfaceBlendMode(бре.плава, sdl2.SDL_BLENDMODE_NONE)
         if рез != 0:
             raise Exception('SDL_SetSurfaceBlendMode', sdl2.SDL_GetError())
-        рез = sdl2.SDL_FillRect(бре.плава, ctypes.byref(бре.пуо), 0xFFFFFFFF)
+        рез = sdl2.SDL_FillRect(бре.плава, ctypes.byref(бре.пуо), 0xFFFF0000)
         if рез != 0:
             raise Exception('SDL_FillRect', sdl2.SDL_GetError())
+        бре.пуо.x = 50
+        бре.пуо.y = 50
 
     def нашкрабај(бре):
         # рез = sdl2.SDL_FillRect(бре.главна_површ, ctypes.byref(бре.пуо), 0x00FF0000)
