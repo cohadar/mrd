@@ -39,9 +39,9 @@ def Прозор(почетак, наслов, ширина, висина):
         ширина,
         висина,
         # sdl2.SDL_WINDOW_SHOWN
-        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN
+        sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN
         # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_MAXIMIZED
-        sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
+        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
     )
     if not рез:
         raise Exception('SDL_CreateWindow', sdl2.SDL_GetError())
@@ -52,13 +52,32 @@ def Молер(прозор):
     рез = sdl2.SDL_CreateRenderer(прозор, -1, 0)
     if not рез:
         raise Exception('SDL_CreateRenderer', sdl2.SDL_GetError())
+    инфо = sdl2.SDL_RendererInfo()
+    инфо_рез = sdl2.SDL_GetRendererInfo(рез, ctypes.byref(инфо))
+    if инфо_рез != 0:
+        raise Exception('SDL_GetRendererInfo', sdl2.SDL_GetError())
+    print('МОЛЕР:', инфо.name.decode('utf-8'))
+    if инфо.flags & sdl2.SDL_RENDERER_SOFTWARE:
+        print('SDL_RENDERER_SOFTWARE')
+    if инфо.flags & sdl2.SDL_RENDERER_ACCELERATED:
+        print('SDL_RENDERER_ACCELERATED')
+    if инфо.flags & sdl2.SDL_RENDERER_PRESENTVSYNC:
+        print('SDL_RENDERER_PRESENTVSYNC')
+    if инфо.flags & sdl2.SDL_RENDERER_TARGETTEXTURE:
+        print('SDL_RENDERER_SOFTWARE')
+    print('нтф', инфо.num_texture_formats)
+    for и in range(инфо.num_texture_formats):
+        пфиме = sdl2.SDL_GetPixelFormatName(инфо.texture_formats[и]).decode('utf-8')
+        print(f'формат {пфиме}')
+    print('макс ширина', инфо.max_texture_width)
+    print('макс дужина', инфо.max_texture_height)
     return рез
 
 
 def ГлавнаШара(молер, ширина, висина):
     рез = sdl2.SDL_CreateTexture(
         молер,
-        sdl2.SDL_PIXELFORMAT_ARGB8888,
+        sdl2.SDL_PIXELFORMAT_RGBA32,
         sdl2.SDL_TEXTUREACCESS_STREAMING,
         ширина, висина)
     if not рез:
@@ -70,14 +89,26 @@ def Пиксели(ширина, висина):
     return ctypes.create_string_buffer(ширина * висина * 4)
 
 
+def ГлавнаПоврш(пиксели, ширина, висина):
+    рез = sdl2.SDL_CreateRGBSurfaceWithFormatFrom(
+        ctypes.byref(пиксели),
+        ширина,
+        висина, 32,
+        ширина * 4,
+        sdl2.SDL_PIXELFORMAT_RGBA32)
+    if not рез:
+        raise Exception('SDL_CreateRGBSurfaceWithFormatFrom', sdl2.SDL_GetError())
+    return рез
+
+
 class Воденица():
-    def __init__(бре, обрада_догађаја, шкработине, молер, главна_шара, пиксели, ширина):
+    def __init__(бре, обрада_догађаја, шкработине, молер, главна_шара, главна_површ):
         бре.обрада_догађаја = обрада_догађаја
         бре.шкработине = шкработине
         бре.молер = молер
         бре.главна_шара = главна_шара
-        бре.пиксели = пиксели
-        бре.ширина = ширина
+        бре.пиксели = главна_површ.contents.pixels
+        бре.корак = главна_површ.contents.pitch
 
     def __call__(бре):
         крај = False
@@ -92,7 +123,8 @@ class Воденица():
                 бре.обрада_догађаја.обради(догађај)
             for шкработина in бре.шкработине:
                 шкработина.нашкрабај()
-            рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, бре.пиксели, бре.ширина * 4)
+            рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, бре.пиксели, бре.корак)
+            # SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
             if рез != 0:
                 raise Exception('SDL_UpdateTexture', sdl2.SDL_GetError())
             рез = sdl2.SDL_RenderClear(бре.молер)
