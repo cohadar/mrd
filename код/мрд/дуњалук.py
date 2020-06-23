@@ -74,7 +74,7 @@ def Молер(прозор):
     return рез
 
 
-def ГлавнаШара(молер, ширина, висина):
+def Шара(молер, ширина, висина):
     рез = sdl2.SDL_CreateTexture(
         молер,
         sdl2.SDL_PIXELFORMAT_RGBA32,
@@ -85,7 +85,7 @@ def ГлавнаШара(молер, ширина, висина):
     return рез
 
 
-def ГлавнаПоврш(ширина, висина):
+def Површ(ширина, висина):
     рез = sdl2.SDL_CreateRGBSurfaceWithFormat(
         0,
         ширина,
