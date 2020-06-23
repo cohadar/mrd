@@ -1,27 +1,12 @@
 import sdl2
-import ctypes
 
 
 class ПлаваКоцка():
     """ Demonstrira blend sa šupljinom / providnim pikselima """
-    def обради(бре, догађај):
-        код = догађај.key.keysym.scancode
-        if код == sdl2.SDL_SCANCODE_W:
-            бре.пуо.y -= 1
-        elif код == sdl2.SDL_SCANCODE_S:
-            бре.пуо.y += 1
-        elif код == sdl2.SDL_SCANCODE_A:
-            бре.пуо.x -= 1
-        elif код == sdl2.SDL_SCANCODE_D:
-            бре.пуо.x += 1
-        else:
-            print(код)
-        print(бре.пуо.x, бре.пуо.y)
-
-    def __init__(бре, главна_површ, обрада_догађаја):
+    def __init__(бре, површ, положај):
         print("ПлаваКоцка __init__")
-        обрада_догађаја.региструј(sdl2.SDL_KEYDOWN, бре.обради)
-        бре.главна_површ = главна_површ
+        бре.положај = положај  # претпоставка је да се положај мења споља
+        бре.површ = површ
         бре.пуо = sdl2.SDL_Rect()
         бре.пуо.x = 0
         бре.пуо.y = 0
@@ -45,14 +30,11 @@ class ПлаваКоцка():
         рез = sdl2.SDL_FillRect(бре.плава, средина, 0x0)
         if рез != 0:
             raise Exception('SDL_FillRect', sdl2.SDL_GetError())
-        бре.пуо.x = главна_површ.contents.w // 2
-        бре.пуо.y = главна_површ.contents.h // 2
 
     def нашкрабај(бре):
-        # рез = sdl2.SDL_FillRect(бре.главна_површ, ctypes.byref(бре.пуо), 0x00FF0000)
-        # if рез != 0:
-        #     raise Exception('SDL_FillRect', sdl2.SDL_GetError())
-        рез = sdl2.SDL_BlitSurface(бре.плава, None, бре.главна_површ, ctypes.byref(бре.пуо))
+        бре.пуо.x = бре.положај.x
+        бре.пуо.y = бре.положај.y
+        рез = sdl2.SDL_BlitSurface(бре.плава, None, бре.површ, бре.пуо)
         if рез != 0:
             raise Exception('SDL_BlitSurface', sdl2.SDL_GetError())
 
