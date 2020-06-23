@@ -39,8 +39,8 @@ def Прозор(почетак, наслов, ширина, висина):
         ширина,
         висина,
         # sdl2.SDL_WINDOW_SHOWN
-        sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN
-        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_MAXIMIZED
+        # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN
+        sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_MAXIMIZED
         # sdl2.SDL_WINDOW_RESIZABLE | sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_FULLSCREEN_DESKTOP
     )
     if not рез:
@@ -85,19 +85,15 @@ def ГлавнаШара(молер, ширина, висина):
     return рез
 
 
-def Пиксели(ширина, висина):
-    return ctypes.create_string_buffer(ширина * висина * 4)
-
-
-def ГлавнаПоврш(пиксели, ширина, висина):
-    рез = sdl2.SDL_CreateRGBSurfaceWithFormatFrom(
-        ctypes.byref(пиксели),
+def ГлавнаПоврш(ширина, висина):
+    рез = sdl2.SDL_CreateRGBSurfaceWithFormat(
+        0,
         ширина,
-        висина, 32,
-        ширина * 4,
+        висина,
+        32,
         sdl2.SDL_PIXELFORMAT_RGBA32)
     if not рез:
-        raise Exception('SDL_CreateRGBSurfaceWithFormatFrom', sdl2.SDL_GetError())
+        raise Exception('SDL_CreateRGBSurfaceWithFormat', sdl2.SDL_GetError())
     return рез
 
 
@@ -107,8 +103,7 @@ class Воденица():
         бре.шкработине = шкработине
         бре.молер = молер
         бре.главна_шара = главна_шара
-        бре.пиксели = главна_површ.contents.pixels
-        бре.корак = главна_површ.contents.pitch
+        бре.главна_површ = главна_површ
 
     def __call__(бре):
         крај = False
@@ -123,7 +118,9 @@ class Воденица():
                 бре.обрада_догађаја.обради(догађај)
             for шкработина in бре.шкработине:
                 шкработина.нашкрабај()
-            рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, бре.пиксели, бре.корак)
+            пиксели = бре.главна_површ.contents.pixels
+            корак = бре.главна_површ.contents.pitch
+            рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, пиксели, корак)
             if рез != 0:
                 raise Exception('SDL_UpdateTexture', sdl2.SDL_GetError())
             рез = sdl2.SDL_RenderClear(бре.молер)
