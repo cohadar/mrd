@@ -7,6 +7,7 @@ setup(
         "pysdl2",
         "attr",
         "dependency-injector",
+        "sortedcontainers",
     ],
     extras_require={
         "dev": [

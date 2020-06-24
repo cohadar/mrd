@@ -1,23 +1,4 @@
 import sdl2
-import random
-import ctypes
-
-
-class ШаренаПозадина():
-    def __init__(бре, површ):
-        бре.површ = површ
-
-    def нашкрабај(бре):
-        корак = бре.површ.contents.pitch
-        ПА = ctypes.c_ubyte * (бре.површ.contents.h * корак)
-        пиксели = ПА.from_address(бре.површ.contents.pixels)
-        висина = бре.површ.contents.h
-        ширина = бре.површ.contents.w
-        for _ in range(10000):
-            y = random.randint(0, висина - 1)
-            x = random.randint(0, ширина - 1)
-            индекс = y * корак + x * 4 + random.randint(0, 3)
-            пиксели[индекс] = random.randint(0, 255)
 
 
 class Лупа():
@@ -26,7 +7,7 @@ class Лупа():
         if код == sdl2.SDL_SCANCODE_L:
             pass
 
-    def __init__(бре, главна_површ, обрада_догађаја):
+    def __init__(бре, главна_површ, обрада_догађаја, шкработине):
         print("Лупа __init__")
         обрада_догађаја.региструј(sdl2.SDL_KEYDOWN, бре.обради)
         бре.главна_површ = главна_површ
@@ -38,6 +19,8 @@ class Лупа():
         рез = sdl2.SDL_SetSurfaceBlendMode(бре.фокус, sdl2.SDL_BLENDMODE_NONE)
         if рез != 0:
             raise Exception('SDL_SetSurfaceBlendMode', sdl2.SDL_GetError())
+        бре.шкработине = шкработине
+        бре.шкработине.додај(10000, бре)
 
     def нашкрабај(бре):
         рез = sdl2.SDL_BlitSurface(бре.главна_површ, бре.извор, бре.фокус, бре.извор)

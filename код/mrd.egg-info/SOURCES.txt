@@ -5,3 +5,9 @@ setup.py
 код/mrd.egg-info/dependency_links.txt
 код/mrd.egg-info/requires.txt
 код/mrd.egg-info/top_level.txt
+код/мрд/__main__.py
+код/мрд/дуњалук/све.py
+код/мрд/шкраб/ледена_коцка.py
+код/мрд/шкраб/лупа.py
+код/мрд/шкраб/плава_коцка.py
+код/мрд/шкраб/шарена_позадина.py

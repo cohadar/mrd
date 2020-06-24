@@ -1,6 +1,7 @@
 import sdl2
 import ctypes
 import atexit
+from sortedcontainers import SortedDict
 
 
 class Почетак():
@@ -95,6 +96,32 @@ def Површ(ширина, висина):
     if not рез:
         raise Exception('SDL_CreateRGBSurfaceWithFormat', sdl2.SDL_GetError())
     return рез
+
+
+class Шкработине():
+    def __init__(бре):
+        бре.дата = SortedDict()
+        бре.ел = set()
+        бре.бројач = 0
+
+    def __iter__(бре):
+        return iter(бре.дата.values())
+
+    def додај(бре, приоритет, елемент):
+        if елемент in бре.ел:
+            raise ValueError('Шкработина већ додата:', елемент)
+        бре.дата[(приоритет, бре.бројач)] = елемент
+        бре.ел.add(елемент)
+        бре.бројач += 1
+
+    def уклони(бре, елемент):
+        бре.ел.remove(елемент)
+        for к in бре.дата.keys():
+            if бре.дата[к] == елемент:
+                del бре.дата[к]
+                break
+        else:
+            raise ValueError('Шкработина није нађена:', елемент)
 
 
 class Воденица():

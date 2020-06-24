@@ -1,6 +1,7 @@
 pysdl2
 attr
 dependency-injector
+sortedcontainers
 
 [dev]
 pytest
