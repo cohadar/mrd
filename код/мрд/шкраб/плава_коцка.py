@@ -1,4 +1,5 @@
 import sdl2
+from мрд.xkcd import БОЈЕ, инт_боја
 
 
 class ПлаваКоцка():
@@ -24,10 +25,10 @@ class ПлаваКоцка():
         рез = sdl2.SDL_SetSurfaceBlendMode(бре.плава, sdl2.SDL_BLENDMODE_BLEND)
         if рез != 0:
             raise Exception('SDL_SetSurfaceBlendMode', sdl2.SDL_GetError())
-        рез = sdl2.SDL_FillRect(бре.плава, бре.пуо, 0xFFFF0000)
+        рез = sdl2.SDL_FillRect(бре.плава, бре.пуо, инт_боја(бре.плава.contents.format, БОЈЕ['blue']))
         if рез != 0:
             raise Exception('SDL_FillRect', sdl2.SDL_GetError())
-        рез = sdl2.SDL_FillRect(бре.плава, средина, 0x0)
+        рез = sdl2.SDL_FillRect(бре.плава, средина, инт_боја(бре.плава.contents.format, БОЈЕ['transparent']))
         if рез != 0:
             raise Exception('SDL_FillRect', sdl2.SDL_GetError())
 
