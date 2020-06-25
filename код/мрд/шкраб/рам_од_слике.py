@@ -2,10 +2,10 @@ import sdl2
 from мрд.xkcd import БОЈЕ, инт_боја
 
 
-class ПлаваКоцка():
+class РамОдСлике():
     """ Demonstrira blend sa šupljinom / providnim pikselima """
-    def __init__(бре, површ, положај, шкработине):
-        print("ПлаваКоцка __init__")
+    def __init__(бре, површ, положај, шкработине, име_боје):
+        print("РамОдСлике __init__", име_боје)
         бре.положај = положај  # претпоставка је да се положај мења споља
         бре.површ = површ
         бре.пуо = sdl2.SDL_Rect()
@@ -25,7 +25,7 @@ class ПлаваКоцка():
         рез = sdl2.SDL_SetSurfaceBlendMode(бре.плава, sdl2.SDL_BLENDMODE_BLEND)
         if рез != 0:
             raise Exception('SDL_SetSurfaceBlendMode', sdl2.SDL_GetError())
-        рез = sdl2.SDL_FillRect(бре.плава, бре.пуо, инт_боја(бре.плава.contents.format, БОЈЕ['blue']))
+        рез = sdl2.SDL_FillRect(бре.плава, бре.пуо, инт_боја(бре.плава.contents.format, БОЈЕ[име_боје]))
         if рез != 0:
             raise Exception('SDL_FillRect', sdl2.SDL_GetError())
         рез = sdl2.SDL_FillRect(бре.плава, средина, инт_боја(бре.плава.contents.format, БОЈЕ['transparent']))
