@@ -1,7 +1,7 @@
 import sdl2
 from мрд.догађај.штампа import региструј, Обрада
 from мрд.догађај.мрдачи import Стрелице, Wsad
-from мрд.дуњалук import Почетак, Крај, Молер, Прозор, Шара, Површ, Воденица, Шкработине
+from мрд.дуњалук import Почетак, Крај, Молер, Прозор, Шара, Површ, КрајњаПоврш, Воденица, Шкработине
 from мрд.шкраб import ЛеденаКоцка, РамОдСлике, ШаренаПозадина, Лупа
 import dependency_injector.containers as containers
 import dependency_injector.providers as providers
@@ -17,9 +17,9 @@ class Контејнер(containers.DynamicContainer):
         к.прозор = providers.Singleton(Прозор, почетак=к.почетак, наслов="Мрд", ширина=к.ширина, висина=к.висина)
         к.молер = providers.Singleton(Молер, прозор=к.прозор)
         к.главна_шара = providers.Singleton(Шара, молер=к.молер, ширина=к.ширина, висина=к.висина)
-        к.главна_површ = providers.Singleton(Површ, ширина=к.ширина, висина=к.висина)
-        к.стаклена_површ = providers.Singleton(Површ, ширина=к.ширина, висина=к.висина)
-        к.крајња_површ = providers.Singleton(Површ, ширина=к.ширина, висина=к.висина)
+        к.главна_површ = providers.Singleton(Површ, ширина=к.ширина, висина=к.висина, мод=sdl2.SDL_BLENDMODE_NONE)
+        к.стаклена_површ = providers.Singleton(Површ, ширина=к.ширина, висина=к.висина, мод=sdl2.SDL_BLENDMODE_BLEND)
+        к.крајња_површ = providers.Singleton(КрајњаПоврш, ширина=к.ширина, висина=к.висина)
 
         к.обрада_догађаја = providers.Singleton(Обрада)
         к.шкработине = providers.Singleton(Шкработине)

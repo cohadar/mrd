@@ -14,7 +14,7 @@ class Лупа():
         бре.стаклена_површ = стаклена_површ
         бре.извор = sdl2.SDL_Rect(0, 0, 16, 16)
         бре.притока = sdl2.SDL_Rect(16, 16, 16*4, 16*4)
-        бре.фокус = sdl2.SDL_CreateRGBSurfaceWithFormat(0, 16, 16, 32, sdl2.SDL_PIXELFORMAT_RGBA32)
+        бре.фокус = sdl2.SDL_CreateRGBSurfaceWithFormat(0, 16, 16, 24, sdl2.SDL_PIXELFORMAT_RGB888)
         if not бре.фокус:
             raise Exception('SDL_CreateRGBSurfaceWithFormat', sdl2.SDL_GetError())
         рез = sdl2.SDL_SetSurfaceBlendMode(бре.фокус, sdl2.SDL_BLENDMODE_NONE)

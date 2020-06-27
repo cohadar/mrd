@@ -17,6 +17,5 @@ class ШаренаПозадина():
         for _ in range(1000):
             y = random.randint(0, висина - 1)
             x = random.randint(0, ширина - 1)
-            индекс = y * корак + x * 4 + random.randint(0, 3)
-            пиксели[индекс] = random.randint(0, 255)
-
+            индекс = y * корак + x * 4
+            пиксели[индекс + random.randint(0, 3)] = random.randint(0, 255)
