@@ -1,4 +1,5 @@
 import sdl2
+import time
 import ctypes
 import atexit
 from sortedcontainers import SortedDict
@@ -142,32 +143,59 @@ class Воденица():
         бре.молер = молер
         бре.главна_шара = главна_шара
         бре.главна_површ = главна_површ
+        бре.штампано = False
+        бре.догађај = sdl2.SDL_Event()
+
+    def физика(бре, откуцај):
+        штампано = False
+        while sdl2.SDL_PollEvent(ctypes.byref(бре.догађај)) != 0:
+            if бре.догађај.type == sdl2.SDL_QUIT:
+                return False
+            штампано = True
+            бре.обрада_догађаја.обради(бре.догађај)
+        if штампано:
+            print()
+        return True
+
+    def цртање(бре):
+        for шкработина in бре.шкработине:
+            шкработина.нашкрабај()
+        пиксели = бре.главна_површ.contents.pixels
+        корак = бре.главна_површ.contents.pitch
+        рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, пиксели, корак)
+        if рез != 0:
+            raise Exception('SDL_UpdateTexture', sdl2.SDL_GetError())
+        рез = sdl2.SDL_RenderClear(бре.молер)
+        if рез != 0:
+            raise Exception('SDL_RenderClear', sdl2.SDL_GetError())
+        рез = sdl2.SDL_RenderCopy(бре.молер, бре.главна_шара, None, None)
+        if рез != 0:
+            raise Exception('SDL_RenderCopy', sdl2.SDL_GetError())
+        sdl2.SDL_RenderPresent(бре.молер)  # void function
 
     def __call__(бре):
-        крај = False
-        догађај = sdl2.SDL_Event()
-        while not крај:
-            штампано = False
-            while sdl2.SDL_PollEvent(ctypes.byref(догађај)) != 0:
-                if догађај.type == sdl2.SDL_QUIT:
-                    крај = True
+        откуцај = 0
+        херц = 1.0 / 60.0
+        пре = time.perf_counter()
+        скупљач = 0.0
+        МАКС_ЛАГ_СЕКУНДИ = 15.0
+        лаг_луфт = МАКС_ЛАГ_СЕКУНДИ
+        while True:
+            сад = time.perf_counter()
+            време_петље, пре = сад - пре, сад
+            скупљач += време_петље
+            if скупљач >= херц:
+                скупљач -= херц
+                if not бре.физика(откуцај):
                     break
-                штампано = True
-                бре.обрада_догађаја.обради(догађај)
-            for шкработина in бре.шкработине:
-                шкработина.нашкрабај()
-            пиксели = бре.главна_површ.contents.pixels
-            корак = бре.главна_површ.contents.pitch
-            рез = sdl2.SDL_UpdateTexture(бре.главна_шара, None, пиксели, корак)
-            if рез != 0:
-                raise Exception('SDL_UpdateTexture', sdl2.SDL_GetError())
-            рез = sdl2.SDL_RenderClear(бре.молер)
-            if рез != 0:
-                raise Exception('SDL_RenderClear', sdl2.SDL_GetError())
-            рез = sdl2.SDL_RenderCopy(бре.молер, бре.главна_шара, None, None)
-            if рез != 0:
-                raise Exception('SDL_RenderCopy', sdl2.SDL_GetError())
-            sdl2.SDL_RenderPresent(бре.молер)  # void function
-            if штампано:
-                print()
+                откуцај += 1
+            if скупљач >= херц:
+                скупљач -= херц
+                лаг_луфт -= време_петље
+                if лаг_луфт < 0.0:
+                    raise Exception('умро пуж од спорости')
+                print('лаг_луфт', лаг_луфт)
+            else:
+                лаг_луфт = МАКС_ЛАГ_СЕКУНДИ
+            бре.цртање()
 
