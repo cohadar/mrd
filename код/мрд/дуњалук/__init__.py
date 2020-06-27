@@ -72,6 +72,17 @@ def Молер(прозор):
         print(f'формат {пфиме}')
     print('макс ширина', инфо.max_texture_width)
     print('макс дужина', инфо.max_texture_height)
+
+    дм = sdl2.SDL_DisplayMode()
+    број_екрана = sdl2.SDL_GetNumVideoDisplays()
+    for индекс_екрана in range(број_екрана):
+        ок_0 = sdl2.SDL_GetCurrentDisplayMode(индекс_екрана, ctypes.byref(дм))
+        if ок_0 != 0:
+            raise Exception('SDL_GetCurrentDisplayMode', sdl2.SDL_GetError())
+        print(f"екран{индекс_екрана} формат: {дм.format}")
+        print(f"екран{индекс_екрана} ширина: {дм.w}")
+        print(f"екран{индекс_екрана} висина: {дм.h}")
+        print(f"екран{индекс_екрана} херзи: {дм.refresh_rate}")
     return рез
 
 
