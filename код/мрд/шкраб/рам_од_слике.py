@@ -20,17 +20,9 @@ class РамОдСлике():
         средина.h = 10
 
         бре.плава = sdl2.SDL_CreateRGBSurfaceWithFormat(0, 16, 16, 32, sdl2.SDL_PIXELFORMAT_RGBA32)
-        if not бре.плава:
-            raise Exception('SDL_CreateRGBSurfaceWithFormat', sdl2.SDL_GetError())
-        рез = sdl2.SDL_SetSurfaceBlendMode(бре.плава, sdl2.SDL_BLENDMODE_BLEND)
-        if рез != 0:
-            raise Exception('SDL_SetSurfaceBlendMode', sdl2.SDL_GetError())
-        рез = sdl2.SDL_FillRect(бре.плава, бре.пуо, инт_боја(бре.плава.contents.format, БОЈЕ[име_боје]))
-        if рез != 0:
-            raise Exception('SDL_FillRect', sdl2.SDL_GetError())
-        рез = sdl2.SDL_FillRect(бре.плава, средина, инт_боја(бре.плава.contents.format, БОЈЕ['transparent']))
-        if рез != 0:
-            raise Exception('SDL_FillRect', sdl2.SDL_GetError())
+        sdl2.SDL_SetSurfaceBlendMode(бре.плава, sdl2.SDL_BLENDMODE_BLEND)
+        sdl2.SDL_FillRect(бре.плава, бре.пуо, инт_боја(бре.плава.contents.format, БОЈЕ[име_боје]))
+        sdl2.SDL_FillRect(бре.плава, средина, инт_боја(бре.плава.contents.format, БОЈЕ['transparent']))
 
         бре.шкработине = шкработине
         бре.шкработине.додај(2, бре)
@@ -38,7 +30,5 @@ class РамОдСлике():
     def нашкрабај(бре):
         бре.пуо.x = бре.положај.x
         бре.пуо.y = бре.положај.y
-        рез = sdl2.SDL_BlitSurface(бре.плава, None, бре.површ, бре.пуо)
-        if рез != 0:
-            raise Exception('SDL_BlitSurface', sdl2.SDL_GetError())
+        sdl2.SDL_BlitSurface(бре.плава, None, бре.површ, бре.пуо)
 

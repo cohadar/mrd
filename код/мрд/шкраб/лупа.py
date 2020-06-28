@@ -15,19 +15,11 @@ class Лупа():
         бре.извор = sdl2.SDL_Rect(0, 0, 16, 16)
         бре.притока = sdl2.SDL_Rect(16, 16, 16*4, 16*4)
         бре.фокус = sdl2.SDL_CreateRGBSurfaceWithFormat(0, 16, 16, 24, sdl2.SDL_PIXELFORMAT_RGB888)
-        if not бре.фокус:
-            raise Exception('SDL_CreateRGBSurfaceWithFormat', sdl2.SDL_GetError())
-        рез = sdl2.SDL_SetSurfaceBlendMode(бре.фокус, sdl2.SDL_BLENDMODE_NONE)
-        if рез != 0:
-            raise Exception('SDL_SetSurfaceBlendMode', sdl2.SDL_GetError())
+        sdl2.SDL_SetSurfaceBlendMode(бре.фокус, sdl2.SDL_BLENDMODE_NONE)
         бре.шкработине = шкработине
         бре.шкработине.додај(10000, бре)
 
     def нашкрабај(бре):
-        рез = sdl2.SDL_BlitSurface(бре.главна_површ, бре.извор, бре.фокус, бре.извор)
-        if рез != 0:
-            raise Exception('SDL_BlitSurface', sdl2.SDL_GetError())
-        рез = sdl2.SDL_BlitScaled(бре.фокус, бре.извор, бре.стаклена_површ, бре.притока)
-        if рез != 0:
-            raise Exception('SDL_BlitSurface', sdl2.SDL_GetError())
+        sdl2.SDL_BlitSurface(бре.главна_површ, бре.извор, бре.фокус, бре.извор)
+        sdl2.SDL_BlitScaled(бре.фокус, бре.извор, бре.стаклена_површ, бре.притока)
 

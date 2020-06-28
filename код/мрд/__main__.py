@@ -5,6 +5,7 @@ from мрд.дуњалук import Почетак, Крај, Молер, Проз
 from мрд.шкраб import ЛеденаКоцка, РамОдСлике, ШаренаПозадина, Лупа
 import dependency_injector.containers as containers
 import dependency_injector.providers as providers
+from мрд import провере
 
 
 class Контејнер(containers.DynamicContainer):
@@ -82,6 +83,7 @@ class Контејнер(containers.DynamicContainer):
 
 
 def главна():
+    провере.региструј()
     к = Контејнер()
     обрада_догађаја = к.обрада_догађаја()  # дебуг штампа
     региструј(обрада_догађаја)  # дебуг штампа
@@ -92,4 +94,5 @@ def главна():
 
 if __name__ == '__main__':
     главна()
+
 
